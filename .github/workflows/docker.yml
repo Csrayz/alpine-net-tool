@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # 使用最新版本
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -33,10 +33,12 @@ jobs:
 
       - name: Push Docker image
         run: |
+          # 推送 latest 标签的镜像
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest
+
+          # 如果是 tag 推送，推送带有 tag 的镜像
           if [[ -n "${{ steps.extract_tag.outputs.tag }}" ]]; then
             TAG=${{ steps.extract_tag.outputs.tag }}
-            docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
+            docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
             docker push ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
           fi
-          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest
