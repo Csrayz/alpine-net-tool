@@ -9,4 +9,14 @@ RUN apk update && apk add --no-cache \
     bash
 
 # 设置容器启动时 runs 不注销，常驻进程
-CMD ["/bin/sh", "-c", "tail -f /dev/null"]
+# CMD ["/bin/sh", "-c", "tail -f /dev/null"]
+
+# 定义一个启动脚本
+RUN echo '#!/bin/sh' > /start.sh \
+    && echo 'while true; do' >> /start.sh \
+    && echo '    sleep 1' >> /start.sh \
+    && echo 'done' >> /start.sh \
+    && chmod +x /start.sh
+
+# 设置 ENTRYPOINT 和 CMD
+ENTRYPOINT ["/start.sh"]
