@@ -35,9 +35,8 @@ jobs:
         run: |
           if [[ -n "${{ steps.extract_tag.outputs.tag }}" ]]; then
             TAG=${{ steps.extract_tag.outputs.tag }}
-          else
-            TAG=${{ github.sha }}
+            docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
+            docker push ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
           fi
-          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/alpine-net-tool:$TAG
